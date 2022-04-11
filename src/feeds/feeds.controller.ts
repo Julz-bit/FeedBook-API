@@ -9,8 +9,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/role.enum';
 import { RolesGuard } from 'src/users/roles.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { multerOptions } from 'src/config/multer.config';
 
 @Controller('feeds')
 export class FeedsController {
@@ -19,14 +18,7 @@ export class FeedsController {
   // @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads/',
-      filename: (req, file, callback) => {
-        callback(null, `${Date.now()}${extname(file.originalname)}`);
-      }
-    })
-  }))
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   async create(@Body() createFeedDto: CreateFeedDto, @UploadedFile() file: Express.Multer.File, @AuthUser() user: User) {
     return this.feedsService.create(createFeedDto, file.filename, user);
   }
