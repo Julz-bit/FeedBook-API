@@ -31,6 +31,19 @@
 ```bash
 $ npm install
 ```
+## CONFIG AND DATABASE MIGRATIONS
+
+```bash
+# copy env
+cp .env.example .env
+
+# copy env.dev for JWT secret
+cp .env.dev.example .env.dev
+
+# run prisma migration
+npx prisma migrate dev --name DatabaseMigration
+```
+
 
 ## Running the app
 
@@ -44,6 +57,7 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
 
 ## Test
 
