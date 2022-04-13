@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FeedsService } from './feeds.service';
-import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { AuthUser } from '../decorators/auth-user.decorator';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from '@prisma/client';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/users/role.enum';
-import { RolesGuard } from 'src/users/roles.guard';
+import { Roles } from '../decorators/roles.decorator';
+import { Role } from '../users/role.enum';
+import { RolesGuard } from '../users/roles.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/config/multer.config';
+import { multerOptions } from '../config/multer.config';
 
 @Controller('feeds')
 export class FeedsController {

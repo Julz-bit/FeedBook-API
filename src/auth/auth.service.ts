@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
-import { RegisterUserDto } from 'src/users/dto/register-user.dto';
+import { UsersService } from '../users/users.service';
+import { RegisterUserDto } from '../users/dto/register-user.dto';
 import { User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private usersService: UsersService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
+        private prisma: PrismaService
     ) { }
 
     async validateUser(email: string, pass: string) {
@@ -27,16 +29,29 @@ export class AuthService {
 
     async login(user: User) {
         const payload = {
-            sub: user.id,
+            sub: user.id, 
             email: user.email,
             name: user.name,
             address: user.address,
             roles: user.role
         }
 
-        return {
+        const token = {
             access_token: this.jwtService.sign(payload)
         }
+
+        const expiration = new Date();
+        expiration.setDate(expiration.getDate() + 1);
+
+        await this.prisma.authToken.create({
+            data: {
+                user_id: user.id,
+                api_token: token.access_token,
+                expiredAt: expiration,
+            }
+        });
+
+        return token;
     }
 
     async register(registerUserDto: RegisterUserDto) {

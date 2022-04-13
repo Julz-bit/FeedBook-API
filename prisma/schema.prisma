@@ -19,7 +19,7 @@ model User {
   address  String
   password String
   feeds    Feed[]
-  role     Role  @default(user)
+  role     Role     @default(user)
   joined   DateTime @default(now())
 }
 
@@ -33,4 +33,12 @@ model Feed {
   userId    Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model AuthToken {
+  id        Int      @id @default(autoincrement())
+  user_id   Int?
+  api_token String
+  expiredAt DateTime
+  createdAt DateTime @default(now())
 }
