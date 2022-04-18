@@ -52,7 +52,7 @@ export class FeedsService {
     })
   }
 
-  async update(id: number, updateFeed: UpdateFeedDto): Promise<Feed> {
+  async update(id: number, updateFeed: UpdateFeedDto, filename: string): Promise<Feed> {
     const feed = await this.findOne(id);
     if (!feed) {
       throw new NotFoundException(`${id} not found`)
@@ -60,7 +60,11 @@ export class FeedsService {
 
     return this.prisma.feed.update({
       where: { id },
-      data: updateFeed
+      data: {
+        title: updateFeed.title,
+        desc: updateFeed.desc,
+        image: filename,
+      }
     })
   }
 

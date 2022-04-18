@@ -43,8 +43,9 @@ export class FeedsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateFeedDto: UpdateFeedDto) {
-    return this.feedsService.update(+id, updateFeedDto);
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async update(@Param('id') id: string, @Body() updateFeedDto: UpdateFeedDto, @UploadedFile() file: Express.Multer.File) {
+    return this.feedsService.update(+id, updateFeedDto, file.filename);
   }
 
   @UseGuards(JwtAuthGuard)
